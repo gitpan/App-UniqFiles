@@ -11,7 +11,7 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
 
-our $VERSION = '0.03'; # VERSION
+our $VERSION = '0.04'; # VERSION
 
 our %SPEC;
 
@@ -34,7 +34,7 @@ _
             default => 1,
             arg_aliases => {
                 u => {
-                    summary => 'Alias for --report-unique --noreport-duplicate',
+                    summary => 'Alias for --report-unique --report-duplicate=0',
                     code => sub {
                         my %args = @_;
                         my $args = $args{args};
@@ -43,7 +43,8 @@ _
                     },
                 },
                 d => {
-                    summary => 'Alias for --noreport-unique --report-duplicate',
+                    summary =>
+                        'Alias for --noreport-unique --report-duplicate=1',
                     code => sub {
                         my %args = @_;
                         my $args = $args{args};
@@ -74,6 +75,17 @@ _
             arg_aliases => {
             },
         }],
+        check_content => [bool => {
+            summary => "Whether to check file content ",
+            description => <<'_',
+
+If set to 0, uniqueness will be determined solely from file size. This can be
+quicker but might generate a false positive when two files of the same size are
+deemed as duplicate even though their content are different.
+
+_
+            default => 1,
+        }],
         count => [bool => {
             summary => "Whether to return each file content's ".
                 "number of occurence",
@@ -94,6 +106,7 @@ sub uniq_files {
     return [400, "Please specify files"] if !$files || !@$files;
     my $report_unique    = $args{report_unique}    // 1;
     my $report_duplicate = $args{report_duplicate} // 2;
+    my $check_content    = $args{check_content}    // 1;
     my $count            = $args{count}            // 0;
 
     # get sizes of all files
@@ -116,14 +129,19 @@ sub uniq_files {
     for my $f (@$files) {
         next unless defined $file_sizes{$f};
         next if $size_counts{ $file_sizes{$f} } == 1;
-        my $fh;
-        unless (open $fh, "<", $f) {
-            $log->error("Can't open file `$f`: $!, skipped");
-            next;
+        my $digest;
+        if ($check_content) {
+            my $fh;
+            unless (open $fh, "<", $f) {
+                $log->error("Can't open file `$f`: $!, skipped");
+                next;
+            }
+            my $ctx = Digest::MD5->new;
+            $ctx->addfile($fh);
+            $digest = $ctx->hexdigest;
+        } else {
+            $digest = "";
         }
-        my $ctx = Digest::MD5->new;
-        $ctx->addfile($fh);
-        my $digest = $ctx->hexdigest;
         $digest_counts{$digest}++;
         $digest_files{$digest} //= [];
         push @{$digest_files{$digest}}, $f;
@@ -175,13 +193,16 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 SYNOPSIS
 
  # See uniq-files script
 
 =head1 DESCRIPTION
+
+Warning: cannot properly handle symlinks or special files (socket, pipe,
+device), so don't feed them.
 
 =head1 FUNCTIONS
 
@@ -204,6 +225,14 @@ Arguments (C<*> denotes required arguments):
 =over 4
 
 =item * B<files>* => I<array>
+
+=item * B<check_content> => I<bool> (default C<1>)
+
+Whether to check file content .
+
+If set to 0, uniqueness will be determined solely from file size. This can be
+quicker but might generate a false positive when two files of the same size are
+deemed as duplicate even though their content are different.
 
 =item * B<count> => I<bool> (default C<0>)
 
@@ -230,7 +259,7 @@ If set to 0, duplicate items will not be returned.
 
 =item * B<report_unique> => I<bool> (default C<1>)
 
-Aliases: B<d> (Alias for --noreport-unique --report-duplicate), B<u> (Alias for --report-unique --noreport-duplicate)
+Aliases: B<d> (Alias for --noreport-unique --report-duplicate=1), B<u> (Alias for --report-unique --report-duplicate=0)
 
 Whether to return unique items.
 

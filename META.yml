@@ -26,4 +26,4 @@ requires:
 resources:
   homepage: http://search.cpan.org/dist/App-UniqFiles/
   repository: http://github.com/sharyanto/perl-App-UniqFiles
-version: 0.03
+version: 0.04

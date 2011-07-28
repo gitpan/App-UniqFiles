@@ -2,12 +2,15 @@ NAME
     App::UniqFiles - Report or omit duplicate file contents
 
 VERSION
-    version 0.03
+    version 0.04
 
 SYNOPSIS
      # See uniq-files script
 
 DESCRIPTION
+    Warning: cannot properly handle symlinks or special files (socket, pipe,
+    device), so don't feed them.
+
 FUNCTIONS
     None are exported, but they are exportable.
 
@@ -25,6 +28,15 @@ FUNCTIONS
     Arguments ("*" denotes required arguments):
 
     *   files* => *array*
+
+    *   check_content => *bool* (default 1)
+
+        Whether to check file content .
+
+        If set to 0, uniqueness will be determined solely from file size.
+        This can be quicker but might generate a false positive when two
+        files of the same size are deemed as duplicate even though their
+        content are different.
 
     *   count => *bool* (default 0)
 
@@ -51,8 +63,8 @@ FUNCTIONS
 
     *   report_unique => *bool* (default 1)
 
-        Aliases: d (Alias for --noreport-unique --report-duplicate), u
-        (Alias for --report-unique --noreport-duplicate)
+        Aliases: d (Alias for --noreport-unique --report-duplicate=1), u
+        (Alias for --report-unique --report-duplicate=0)
 
         Whether to return unique items.
 

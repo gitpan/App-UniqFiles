@@ -1,0 +1,29 @@
+---
+abstract: 'Report or omit duplicate file contents'
+author:
+  - 'Steven Haryanto <stevenharyanto@gmail.com>'
+build_requires:
+  Module::Build: 0.3601
+configure_requires:
+  Module::Build: 0.3601
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.200007, CPAN::Meta::Converter version 2.110930'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: App-UniqFiles
+requires:
+  Digest::MD5: 0
+  File::Slurp: 0
+  File::chdir: 0
+  Log::Any: 0
+  Log::Any::App: 0
+  Sub::Spec: 0.14
+  Sub::Spec::CmdLine: 0
+  Test::More: 0.96
+  perl: 5.010000
+resources:
+  homepage: http://search.cpan.org/dist/App-UniqFiles/
+  repository: http://github.com/sharyanto/perl-App-UniqFiles
+version: 0.02

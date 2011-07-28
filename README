@@ -2,7 +2,7 @@ NAME
     App::UniqFiles - Report or omit duplicate file contents
 
 VERSION
-    version 0.02
+    version 0.03
 
 SYNOPSIS
      # See uniq-files script
@@ -28,27 +28,41 @@ FUNCTIONS
 
     *   count => *bool* (default 0)
 
-        Return each file content's number of occurence.
+        Whether to return each file content's number of occurence.
 
         1 means the file content is only encountered once (unique), 2 means
         there is one duplicate, and so on.
 
-    *   report_duplicate => *bool* (default 0)
+    *   report_duplicate => *int* (default 2)
 
-        Aliases: d (Alias for --noreport-unique --report-duplicate)
+        Whether to return duplicate items.
 
-        Return duplicate items.
+        Can be set to either 0, 1, 2.
+
+        If set to 2 (the default), will only return the first of duplicate
+        items. For example: file1 contains text 'a', file2 'b', file3 'a'.
+        Only file1 will be returned because file2 is unique and file3
+        contains 'a' (already represented by file1).
+
+        If set to 1, will return all the the duplicate items. From the above
+        example: file1 and file3 will be returned.
+
+        If set to 0, duplicate items will not be returned.
 
     *   report_unique => *bool* (default 1)
 
-        Aliases: u (Alias for --report-unique --noreport-duplicate)
+        Aliases: d (Alias for --noreport-unique --report-duplicate), u
+        (Alias for --report-unique --noreport-duplicate)
 
-        Return unique items.
+        Whether to return unique items.
 
 TODO
     *   Handle symlinks
 
         Provide options on how to handle symlinks: ignore them? Follow?
+        Also, with return_duplicate=2, we should not use the symlink
+        (because one of the usage of uniq-files might be to delete duplicate
+        files).
 
     *   Handle special files (socket, pipe, device)
 

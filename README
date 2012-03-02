@@ -2,7 +2,7 @@ NAME
     App::UniqFiles - Report or omit duplicate file contents
 
 VERSION
-    version 0.04
+    version 0.05
 
 SYNOPSIS
      # See uniq-files script
@@ -13,60 +13,6 @@ DESCRIPTION
 
 FUNCTIONS
     None are exported, but they are exportable.
-
-  uniq_files(%args) -> [STATUS_CODE, ERR_MSG, RESULT]
-    Report or omit duplicate file contents.
-
-    Given a list of filenames, will check each file size and content for
-    duplicate content. Interface is a bit like the `uniq` Unix command-line
-    program.
-
-    Returns a 3-element arrayref. STATUS_CODE is 200 on success, or an error
-    code between 3xx-5xx (just like in HTTP). ERR_MSG is a string containing
-    error message, RESULT is the actual result.
-
-    Arguments ("*" denotes required arguments):
-
-    *   files* => *array*
-
-    *   check_content => *bool* (default 1)
-
-        Whether to check file content .
-
-        If set to 0, uniqueness will be determined solely from file size.
-        This can be quicker but might generate a false positive when two
-        files of the same size are deemed as duplicate even though their
-        content are different.
-
-    *   count => *bool* (default 0)
-
-        Whether to return each file content's number of occurence.
-
-        1 means the file content is only encountered once (unique), 2 means
-        there is one duplicate, and so on.
-
-    *   report_duplicate => *int* (default 2)
-
-        Whether to return duplicate items.
-
-        Can be set to either 0, 1, 2.
-
-        If set to 2 (the default), will only return the first of duplicate
-        items. For example: file1 contains text 'a', file2 'b', file3 'a'.
-        Only file1 will be returned because file2 is unique and file3
-        contains 'a' (already represented by file1).
-
-        If set to 1, will return all the the duplicate items. From the above
-        example: file1 and file3 will be returned.
-
-        If set to 0, duplicate items will not be returned.
-
-    *   report_unique => *bool* (default 1)
-
-        Aliases: d (Alias for --noreport-unique --report-duplicate=1), u
-        (Alias for --report-unique --report-duplicate=0)
-
-        Whether to return unique items.
 
 TODO
     *   Handle symlinks
@@ -96,7 +42,7 @@ AUTHOR
     Steven Haryanto <stevenharyanto@gmail.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2011 by Steven Haryanto.
+    This software is copyright (c) 2012 by Steven Haryanto.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

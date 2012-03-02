@@ -11,11 +11,12 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
 
-our $VERSION = '0.04'; # VERSION
+our $VERSION = '0.05'; # VERSION
 
 our %SPEC;
 
 $SPEC{uniq_files} = {
+    v => 1.1,
     summary => 'Report or omit duplicate file contents',
     description => <<'_',
 
@@ -24,20 +25,20 @@ content. Interface is a bit like the `uniq` Unix command-line program.
 
 _
     args    => {
-        files => ['array*' => {
-            of         => 'str*',
-            arg_pos    => 0,
-            arg_greedy => 1,
-        }],
-        report_unique => [bool => {
+        files => {
+            schema => ['array*' => {of=>'str*'}],
+            req    => 1,
+            pos    => 0,
+            greedy => 1,
+        },
+        report_unique => {
+            schema => [bool => {default=>1}],
             summary => 'Whether to return unique items',
-            default => 1,
-            arg_aliases => {
+            cmdline_aliases => {
                 u => {
                     summary => 'Alias for --report-unique --report-duplicate=0',
                     code => sub {
-                        my %args = @_;
-                        my $args = $args{args};
+                        my $args = shift;
                         $args->{report_unique}    = 1;
                         $args->{report_duplicate} = 0;
                     },
@@ -46,15 +47,15 @@ _
                     summary =>
                         'Alias for --noreport-unique --report-duplicate=1',
                     code => sub {
-                        my %args = @_;
-                        my $args = $args{args};
+                        my $args = shift;
                         $args->{report_unique}    = 0;
                         $args->{report_duplicate} = 1;
                     },
                 },
             },
-        }],
-        report_duplicate => [int => {
+        },
+        report_duplicate => {
+            schema => [int => {default=>2}],
             summary => 'Whether to return duplicate items',
             description => <<'_',
 
@@ -71,11 +72,11 @@ file1 and file3 will be returned.
 If set to 0, duplicate items will not be returned.
 
 _
-            default => 2,
-            arg_aliases => {
+            cmdline_aliases => {
             },
-        }],
-        check_content => [bool => {
+        },
+        check_content => {
+            schema => [bool => {default=>1}],
             summary => "Whether to check file content ",
             description => <<'_',
 
@@ -84,9 +85,9 @@ quicker but might generate a false positive when two files of the same size are
 deemed as duplicate even though their content are different.
 
 _
-            default => 1,
-        }],
-        count => [bool => {
+        },
+        count => {
+            schema => [bool => {default=>0}],
             summary => "Whether to return each file content's ".
                 "number of occurence",
             description => <<'_',
@@ -95,8 +96,7 @@ _
 duplicate, and so on.
 
 _
-            default => 0,
-        }],
+        },
     },
 };
 sub uniq_files {
@@ -193,7 +193,7 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 SYNOPSIS
 
@@ -207,63 +207,6 @@ device), so don't feed them.
 =head1 FUNCTIONS
 
 None are exported, but they are exportable.
-
-=head2 uniq_files(%args) -> [STATUS_CODE, ERR_MSG, RESULT]
-
-
-Report or omit duplicate file contents.
-
-Given a list of filenames, will check each file size and content for duplicate
-content. Interface is a bit like the `uniq` Unix command-line program.
-
-Returns a 3-element arrayref. STATUS_CODE is 200 on success, or an error code
-between 3xx-5xx (just like in HTTP). ERR_MSG is a string containing error
-message, RESULT is the actual result.
-
-Arguments (C<*> denotes required arguments):
-
-=over 4
-
-=item * B<files>* => I<array>
-
-=item * B<check_content> => I<bool> (default C<1>)
-
-Whether to check file content .
-
-If set to 0, uniqueness will be determined solely from file size. This can be
-quicker but might generate a false positive when two files of the same size are
-deemed as duplicate even though their content are different.
-
-=item * B<count> => I<bool> (default C<0>)
-
-Whether to return each file content's number of occurence.
-
-1 means the file content is only encountered once (unique), 2 means there is one
-duplicate, and so on.
-
-=item * B<report_duplicate> => I<int> (default C<2>)
-
-Whether to return duplicate items.
-
-Can be set to either 0, 1, 2.
-
-If set to 2 (the default), will only return the first of duplicate items. For
-example: file1 contains text 'a', file2 'b', file3 'a'. Only file1 will be
-returned because file2 is unique and file3 contains 'a' (already represented by
-file1).
-
-If set to 1, will return all the the duplicate items. From the above example:
-file1 and file3 will be returned.
-
-If set to 0, duplicate items will not be returned.
-
-=item * B<report_unique> => I<bool> (default C<1>)
-
-Aliases: B<d> (Alias for --noreport-unique --report-duplicate=1), B<u> (Alias for --report-unique --report-duplicate=0)
-
-Whether to return unique items.
-
-=back
 
 =head1 TODO
 
@@ -299,7 +242,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

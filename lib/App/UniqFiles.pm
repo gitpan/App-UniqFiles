@@ -1,6 +1,6 @@
 package App::UniqFiles;
 
-use 5.010;
+use 5.010001;
 use strict;
 use warnings;
 use Log::Any qw($log);
@@ -11,7 +11,7 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
 
-our $VERSION = '0.05'; # VERSION
+our $VERSION = '0.06'; # VERSION
 
 our %SPEC;
 
@@ -184,8 +184,11 @@ sub uniq_files {
 1;
 #ABSTRACT: Report or omit duplicate file contents
 
+__END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -193,20 +196,80 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-version 0.05
+This document describes version 0.06 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-05-16.
 
 =head1 SYNOPSIS
 
  # See uniq-files script
 
-=head1 DESCRIPTION
+=head1 FUNCTIONS
+
+
+=head2 uniq_files(%args) -> [status, msg, result, meta]
+
+Report or omit duplicate file contents.
+
+Given a list of filenames, will check each file size and content for duplicate
+content. Interface is a bit like the C<uniq> Unix command-line program.
+
+Arguments ('*' denotes required arguments):
+
+=over 4
+
+=item * B<check_content> => I<bool> (default: 1)
+
+Whether to check file content .
+
+If set to 0, uniqueness will be determined solely from file size. This can be
+quicker but might generate a false positive when two files of the same size are
+deemed as duplicate even though their content are different.
+
+=item * B<count> => I<bool> (default: 0)
+
+Whether to return each file content's number of occurence.
+
+1 means the file content is only encountered once (unique), 2 means there is one
+duplicate, and so on.
+
+=item * B<files>* => I<array>
+
+=item * B<report_duplicate> => I<int> (default: 2)
+
+Whether to return duplicate items.
+
+Can be set to either 0, 1, 2.
+
+If set to 2 (the default), will only return the first of duplicate items. For
+example: file1 contains text 'a', file2 'b', file3 'a'. Only file1 will be
+returned because file2 is unique and file3 contains 'a' (already represented by
+file1).
+
+If set to 1, will return all the the duplicate items. From the above example:
+file1 and file3 will be returned.
+
+If set to 0, duplicate items will not be returned.
+
+=item * B<report_unique> => I<bool> (default: 1)
+
+Whether to return unique items.
+
+=back
+
+Return value:
+
+Returns an enveloped result (an array).
+
+First element (status) is an integer containing HTTP status code
+(200 means OK, 4xx caller error, 5xx function error). Second element
+(msg) is a string containing error message, or 'OK' if status is
+200. Third element (result) is optional, the actual result. Fourth
+element (meta) is called result metadata and is optional, a hash
+that contains extra information.
+
+=head1 NOTES
 
 Warning: cannot properly handle symlinks or special files (socket, pipe,
 device), so don't feed them.
-
-=head1 FUNCTIONS
-
-None are exported, but they are exportable.
 
 =head1 TODO
 
@@ -236,19 +299,31 @@ For doing custom hashing instead of Digest::MD5.
 
 =back
 
+=head1 HOMEPAGE
+
+Please visit the project's homepage at L<https://metacpan.org/release/App-UniqFiles>.
+
+=head1 SOURCE
+
+Source repository is at L<https://github.com/sharyanto/perl-App-UniqFiles>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=App-UniqFiles>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
 =head1 AUTHOR
 
 Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Steven Haryanto.
+This software is copyright (c) 2014 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

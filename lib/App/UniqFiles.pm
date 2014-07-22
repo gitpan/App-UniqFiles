@@ -11,7 +11,7 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
 
-our $VERSION = '0.06'; # VERSION
+our $VERSION = '0.07'; # VERSION
 
 our %SPEC;
 
@@ -196,7 +196,7 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-This document describes version 0.06 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-05-16.
+This document describes version 0.07 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-07-22.
 
 =head1 SYNOPSIS
 
@@ -265,6 +265,8 @@ First element (status) is an integer containing HTTP status code
 200. Third element (result) is optional, the actual result. Fourth
 element (meta) is called result metadata and is optional, a hash
 that contains extra information.
+
+ (any)
 
 =head1 NOTES
 

@@ -1,16 +1,21 @@
 #!perl
 
-use 5.010;
+# Note: This script is a CLI interface to Riap function /App/UniqFiles/uniq_files
+# and generated automatically using Dist::Zilla::Plugin::Rinci::ScriptFromFunc version 0.01
+
+our $DATE = '2014-08-16'; # DATE
+our $VERSION = '0.08'; # VERSION
+
+use 5.010001;
 use strict;
 use warnings;
 
-use Perinci::CmdLine::Any;
+use Perinci::CmdLine::Any -prefer_lite=>1;
 
-our $VERSION = '0.07'; # VERSION
+Perinci::CmdLine::Any->new(
+    url => "/App/UniqFiles/uniq_files",
+)->run;
 
-Perinci::CmdLine::Any->new(url => '/App/UniqFiles/uniq_files')->run;
-
-1;
 # ABSTRACT: Report or omit duplicate file contents
 # PODNAME: uniq-files
 
@@ -26,27 +31,30 @@ uniq-files - Report or omit duplicate file contents
 
 =head1 VERSION
 
-This document describes version 0.07 of uniq-files (from Perl distribution App-UniqFiles), released on 2014-07-22.
+This document describes version 0.08 of uniq-files (from Perl distribution App-UniqFiles), released on 2014-08-16.
 
 =head1 SYNOPSIS
 
- # list all files which do not have duplicate contents
- $ uniq-files *
+Usage:
 
- # list all files which have duplicate contents
- $ uniq-files -d *
+ % uniq-files
 
- # list number of occurrences of contents for each file
- $ uniq-files -c *
+Examples:
+
+ TODO
+
+To see all options:
+
+ % uniq-files --help
 
 =head1 DESCRIPTION
 
-This is a simple script to report/omit files which have duplicate contents.
-Think the B<uniq> Unix command, but for checking uniqueness of file contents.
+Given a list of filenames, will check each file size and content for duplicate
+content. Interface is a bit like the C<uniq> Unix command-line program.
 
-=head1 SEE ALSO
+=head1 OPTIONS
 
-B<uniq>, Unix command from which this program is inspired.
+ TODO
 
 =head1 HOMEPAGE
 

@@ -11,7 +11,7 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
 
-our $VERSION = '0.07'; # VERSION
+our $VERSION = '0.08'; # VERSION
 
 our %SPEC;
 
@@ -98,6 +98,23 @@ duplicate, and so on.
 _
         },
     },
+    examples => [
+        {
+            summary   => 'List all files which do no have duplicate contents',
+            src       => 'uniq-files *',
+            src_plang => 'bash',
+        },
+        {
+            summary   => 'List all files which have duplicate contents',
+            src       => 'uniq-files -d *',
+            src_plang => 'bash',
+        },
+        {
+            summary   => 'List number of occurences of contents for each file',
+            src       => 'uniq-files -c *',
+            src_plang => 'bash',
+        },
+    ],
 };
 sub uniq_files {
     my %args = @_;
@@ -196,7 +213,7 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-This document describes version 0.07 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-07-22.
+This document describes version 0.08 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-08-16.
 
 =head1 SYNOPSIS
 
@@ -208,6 +225,26 @@ This document describes version 0.07 of App::UniqFiles (from Perl distribution A
 =head2 uniq_files(%args) -> [status, msg, result, meta]
 
 Report or omit duplicate file contents.
+
+Examples:
+
+ uniq_files();
+
+
+List all files which do no have duplicate contents.
+
+
+ uniq_files();
+
+
+List all files which have duplicate contents.
+
+
+ uniq_files();
+
+
+List number of occurences of contents for each file.
+
 
 Given a list of filenames, will check each file size and content for duplicate
 content. Interface is a bit like the C<uniq> Unix command-line program.

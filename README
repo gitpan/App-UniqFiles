@@ -2,8 +2,8 @@ NAME
     App::UniqFiles - Report or omit duplicate file contents
 
 VERSION
-    This document describes version 0.07 of App::UniqFiles (from Perl
-    distribution App-UniqFiles), released on 2014-07-22.
+    This document describes version 0.08 of App::UniqFiles (from Perl
+    distribution App-UniqFiles), released on 2014-08-16.
 
 SYNOPSIS
      # See uniq-files script
@@ -11,6 +11,20 @@ SYNOPSIS
 FUNCTIONS
   uniq_files(%args) -> [status, msg, result, meta]
     Report or omit duplicate file contents.
+
+    Examples:
+
+     uniq_files();
+
+    List all files which do no have duplicate contents.
+
+     uniq_files();
+
+    List all files which have duplicate contents.
+
+     uniq_files();
+
+    List number of occurences of contents for each file.
 
     Given a list of filenames, will check each file size and content for
     duplicate content. Interface is a bit like the "uniq" Unix command-line

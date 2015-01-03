@@ -1,10 +1,10 @@
 #!perl
 
 # Note: This script is a CLI interface to Riap function /App/UniqFiles/uniq_files
-# and generated automatically using Dist::Zilla::Plugin::Rinci::ScriptFromFunc version 0.01
+# and generated automatically using Dist::Zilla::Plugin::Rinci::ScriptFromFunc version 0.04
 
-our $DATE = '2014-08-16'; # DATE
-our $VERSION = '0.08'; # VERSION
+our $DATE = '2015-01-03'; # DATE
+our $VERSION = '0.09'; # VERSION
 
 use 5.010001;
 use strict;
@@ -31,21 +31,27 @@ uniq-files - Report or omit duplicate file contents
 
 =head1 VERSION
 
-This document describes version 0.08 of uniq-files (from Perl distribution App-UniqFiles), released on 2014-08-16.
+This document describes version 0.09 of uniq-files (from Perl distribution App-UniqFiles), released on 2015-01-03.
 
 =head1 SYNOPSIS
 
 Usage:
 
- % uniq-files
+ % uniq-files [options] <files> ...
 
 Examples:
 
- TODO
+List all files which do no have duplicate contents:
 
-To see all options:
+ % uniq-files *
 
- % uniq-files --help
+List all files which have duplicate contents:
+
+ % uniq-files -d *
+
+List number of occurences of contents for each file:
+
+ % uniq-files -c *
 
 =head1 DESCRIPTION
 
@@ -54,7 +60,148 @@ content. Interface is a bit like the C<uniq> Unix command-line program.
 
 =head1 OPTIONS
 
- TODO
+C<*> marks required options.
+
+=over
+
+=item B<--config-path>=I<s>
+
+Set path to configuration file.
+
+Can be specified multiple times.
+
+=item B<--config-profile>=I<s>
+
+Set configuration profile to use.
+
+=item B<--count>
+
+Whether to return each file content's number of occurence.
+
+1 means the file content is only encountered once (unique), 2 means there is one
+duplicate, and so on.
+
+
+=item B<--files-json>=I<s>
+
+See C<--files>.
+
+=item B<--files>=I<s@>*
+
+Can be specified multiple times.
+
+=item B<--format>=I<s>
+
+Choose output format, e.g. json, text.
+
+=item B<--help>, B<-h>, B<-?>
+
+Display this help message.
+
+=item B<--json>
+
+Set output format to json.
+
+=item B<--naked-res>
+
+When outputing as JSON, strip result envelope.
+
+By default, when outputing as JSON, the full enveloped result is returned, e.g.:
+
+    [200,"OK",[1,2,3],{"func.extra"=>4}]
+
+The reason is so you can get the status (1st element), status message (2nd
+element) as well as result metadata/extra result (4th element) instead of just
+the result (3rd element). However, sometimes you want just the result, e.g. when
+you want to pipe the result for more post-processing. In this case you can use
+`--naked-res` so you just get:
+
+    [1,2,3]
+
+
+=item B<--no-check-content>
+
+If set to 0, uniqueness will be determined solely from file size. This can be
+quicker but might generate a false positive when two files of the same size are
+deemed as duplicate even though their content are different.
+
+
+=item B<--no-config>
+
+Do not use any configuration file.
+
+=item B<--no-report-unique>
+
+=item B<--report-duplicate>=I<i>
+
+Whether to return duplicate items.
+
+Default value:
+
+ 2
+
+Can be set to either 0, 1, 2.
+
+If set to 2 (the default), will only return the first of duplicate items. For
+example: file1 contains text 'a', file2 'b', file3 'a'. Only file1 will be
+returned because file2 is unique and file3 contains 'a' (already represented by
+file1).
+
+If set to 1, will return all the the duplicate items. From the above example:
+file1 and file3 will be returned.
+
+If set to 0, duplicate items will not be returned.
+
+
+=item B<--version>, B<-v>
+
+=item B<-d>
+
+Alias for --noreport-unique --report-duplicate=1.
+
+See C<--no-report-unique>.
+
+=item B<-u>
+
+Alias for --report-unique --report-duplicate=0.
+
+See C<--no-report-unique>.
+
+=back
+
+=head1 FILES
+
+B</etc/uniq-files.conf>
+
+B<~/uniq-files.conf>
+
+=head1 COMPLETION
+
+This script has shell tab completion capability with support for several shells.
+
+=head2 bash
+
+To activate bash completion for this script, put:
+
+ complete -C uniq-files uniq-files
+
+in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+It is recommended, however, that you install L<shcompgen> which allows you to activate completion scripts for several kinds of scripts on multiple shells. Some CPAN distributions (those that are built with L<Dist::Zilla::Plugin::GenShellCompletion>) will even automatically enable shell completion for their included scripts (using C<shcompgen>) at installation time, so you can immadiately have tab completion.
+
+=head2 tcsh
+
+To activate tcsh completion for this script, put:
+
+ complete uniq-files 'p/*/`uniq-files`/'
+
+in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+
+It is also recommended to install C<shcompgen> (see above).
+
+=head2 other shells
+
+For fish and zsh, install C<shcompgen> as described above.
 
 =head1 HOMEPAGE
 
@@ -74,11 +221,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

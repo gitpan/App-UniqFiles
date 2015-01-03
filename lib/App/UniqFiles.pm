@@ -1,5 +1,8 @@
 package App::UniqFiles;
 
+our $DATE = '2015-01-03'; # DATE
+our $VERSION = '0.09'; # VERSION
+
 use 5.010001;
 use strict;
 use warnings;
@@ -10,8 +13,6 @@ use Digest::MD5;
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(uniq_files);
-
-our $VERSION = '0.08'; # VERSION
 
 our %SPEC;
 
@@ -199,7 +200,7 @@ sub uniq_files {
 }
 
 1;
-#ABSTRACT: Report or omit duplicate file contents
+# ABSTRACT: Report or omit duplicate file contents
 
 __END__
 
@@ -213,7 +214,7 @@ App::UniqFiles - Report or omit duplicate file contents
 
 =head1 VERSION
 
-This document describes version 0.08 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2014-08-16.
+This document describes version 0.09 of App::UniqFiles (from Perl distribution App-UniqFiles), released on 2015-01-03.
 
 =head1 SYNOPSIS
 
@@ -268,7 +269,7 @@ Whether to return each file content's number of occurence.
 1 means the file content is only encountered once (unique), 2 means there is one
 duplicate, and so on.
 
-=item * B<files>* => I<array>
+=item * B<files>* => I<array[str]>
 
 =item * B<report_duplicate> => I<int> (default: 2)
 
@@ -292,8 +293,6 @@ Whether to return unique items.
 
 =back
 
-Return value:
-
 Returns an enveloped result (an array).
 
 First element (status) is an integer containing HTTP status code
@@ -303,40 +302,11 @@ First element (status) is an integer containing HTTP status code
 element (meta) is called result metadata and is optional, a hash
 that contains extra information.
 
- (any)
-
+Return value:  (any)
 =head1 NOTES
 
 Warning: cannot properly handle symlinks or special files (socket, pipe,
 device), so don't feed them.
-
-=head1 TODO
-
-=over 4
-
-=item * Handle symlinks
-
-Provide options on how to handle symlinks: ignore them? Follow? Also, with
-return_duplicate=2, we should not use the symlink (because one of the usage of
-uniq-files might be to delete duplicate files).
-
-=item * Handle special files (socket, pipe, device)
-
-Ignore them.
-
-=item * Check hardlinks/inodes first
-
-For fast checking.
-
-=item * Arguments hash_skip_bytes & hash_bytes
-
-For only checking uniqueness against parts of contents.
-
-=item * Arguments hash_module/hash_method/hash_sub
-
-For doing custom hashing instead of Digest::MD5.
-
-=back
 
 =head1 HOMEPAGE
 
@@ -356,11 +326,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
